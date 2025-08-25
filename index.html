@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Batman</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        background: black;
+    }
+
+    #intro-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        z-index: 0;
+    }
+
+    #content-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        color: yellow;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .batman-img {
+        position: absolute;
+        max-width: 35vw;
+        max-height: 35vh;
+        opacity: 0;
+        animation: fadeInOut 2s forwards;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    @keyframes fadeInOut {
+        0% { opacity: 0; transform: scale(0.7); }
+        20% { opacity: 1; transform: scale(1); }
+        80% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0; transform: scale(1.2); }
+    }
+
+    #final-text, #final-img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        pointer-events: auto;
+    }
+
+    #final-text {
+        font-size: 4rem;
+        text-shadow: 2px 2px 8px black;
+        z-index: 2;
+        text-align: center;
+    }
+
+    #final-img {
+        width: 500px;
+        max-width: 70vw;
+        height: auto;
+        z-index: 1;
+    }
+
+    /* Question + Buttons */
+    #question-container {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(143, 143, 0);
+        text-align: center;
+        pointer-events: auto;
+    }
+
+    #question-container h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    #question-container button {
+        padding: 12px 20px;
+        margin: 10px;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 15px;
+        background: yellow;
+        color: black;
+        cursor: pointer;
+        font-weight: bold;
+        position: relative;
+    }
+
+    #question-container button:hover {
+        background: rgb(205, 205, 0);
+    }
+
+    @media screen and (max-width: 430px) {
+        #final-text {
+            font-size: 6vw;
+        }
+        #final-img {
+            width: 70vw;
+        }
+        .batman-img {
+            max-width: 80vw;
+            max-height: 60vh;
+        }
+        #question-container h2 {
+            font-size: 1.3rem;
+        }
+        #question-container button {
+            font-size: 1rem;
+            padding: 8px 14px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<video id="intro-video" muted playsinline>
+    <source src="main-vmake.mp4" type="video/mp4" />
+    Your browser does not support HTML5 video.
+</video>
+
+<div id="content-container">
+    <div id="final-text">Gilocav Bandzo 🦇</div>
+    <img id="final-img" src="batman.jpg" alt="Batman Final" />
+
+    <!-- Question + Yes/No -->
+    <div id="question-container">
+        <h2>მაინც little boy იქნები ხოო 😝🦇? </h2>
+        <button id="yes-btn">ქო</button>
+        <button id="no-btn">არა</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const video = document.getElementById("intro-video");
+    const contentContainer = document.getElementById("content-container");
+    const finalText = document.getElementById("final-text");
+    const finalImg = document.getElementById("final-img");
+    const questionContainer = document.getElementById("question-container");
+    const yesBtn = document.getElementById("yes-btn");
+    const noBtn = document.getElementById("no-btn");
+
+    video.play().catch(err => console.log("Autoplay prevented:", err));
+
+    const batmanPics = ["1.jpg", "2.jpg", "3.jpg"];
+    let count = 0;
+    const intervalTime = 1500;
+
+    const intervalId = setInterval(() => {
+        if (count < batmanPics.length) {
+            const img = document.createElement("img");
+            img.src = batmanPics[count];
+            img.className = "batman-img";
+            img.style.top = Math.floor(Math.random() * 70 + 10) + "%";
+            img.style.left = Math.floor(Math.random() * 70 + 10) + "%";
+            contentContainer.appendChild(img);
+            count++;
+        } else {
+            clearInterval(intervalId);
+            setTimeout(() => {
+                document.querySelectorAll(".batman-img").forEach(el => el.remove());
+                questionContainer.style.display = "block"; // show question
+            }, 1500);
+        }
+    }, intervalTime);
+
+    // YES → show final text + image
+    yesBtn.addEventListener("click", () => {
+        questionContainer.style.display = "none";
+        finalText.style.display = "block";
+        finalImg.style.display = "block";
+    });
+
+    // NO → make button run away (desktop + mobile)
+    function moveNoButton() {
+        const randomX = Math.floor(Math.random() * 70);
+        const randomY = Math.floor(Math.random() * 70);
+        noBtn.style.position = "absolute";
+        noBtn.style.left = randomX + "%";
+        noBtn.style.top = randomY + "%";
+    }
+
+    noBtn.addEventListener("mouseover", moveNoButton);/ // desktop
+    noBtn.addEventListener("touchstart", moveNoButton); // mobile
+});
+</script>
+
+
+</body>
+</html>
